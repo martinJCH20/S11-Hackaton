@@ -38,15 +38,18 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     containerApiPlace: {
-        height: 40, width:"100%", borderColor: 'gray', borderWidth: 0.5 
+        width:"100%",
+         position: "absolute",
+        zIndex: 2000
     },
     mapView:{
-        height: "100%",
-        width: "100%"
+        ...StyleSheet.absoluteFillObject
+        //height: "100%",
+        //width: "100%"
     }
 })
 
-const GOOGLE_PLACES_API_KEY = 'AIzaSyBJweyIF0Z3OhxJAibJmJslpIQigiWUiHA'; // never save your real api key in a snack!
+const GOOGLE_PLACES_API_KEY = ''; // never save your real api key in a snack!
 
 export default class Ubicacion extends Component {
     constructor(props){
@@ -64,7 +67,8 @@ export default class Ubicacion extends Component {
                     const location  = JSON.stringify(position);
                     this.setState({ 
                         //location 
-                        location: position.coords.latitude.toString() + "," + position.coords.longitude.toString()
+                        location: position.coords.latitude.toString() + "," + position.coords.longitude.toString() 
+                        //+","+ position.coords.latitudeDelta.toString() +","+ position.coords.longitudeDelta.toString()
                     });
                 },
                 error => Alert.alert(error.message),
@@ -77,7 +81,7 @@ export default class Ubicacion extends Component {
             console.warn("cath: ",error.messge);            
         }
     }   
-
+//No, 
     render(){
         return(
             <SafeAreaView  style={styles.containerSafeArea}>
@@ -88,15 +92,33 @@ export default class Ubicacion extends Component {
                     </View>
                     <View style={styles.containerDetails}>
                         <View  style={styles.containerApiPlace}>
+                        
                         <GooglePlacesAutocomplete
+                        styles={{
+                            textInputContainer: {
+                              backgroundColor: 'rgba(0,0,0,0)',
+                              borderTopWidth: 0,
+                              borderBottomWidth: 0,
+                            },
+                            textInput: {
+                              marginLeft: 0,
+                              marginRight: 0,
+                              height: 38,
+                              color: '#5d5d5d',
+                              fontSize: 16,
+                            },
+                            predefinedPlacesDescription: {
+                              color: '#1faadb'
+                            }
+                          }}
                             placeholder='Search'
                             onPress={(data, details = null) => {
-                              // 'details' is provided when fetchDetails = true
+                              // 'details' is provided when fetchDetails = true,
                               console.warn(data, details);
                             }}
                             query={{
                               key: GOOGLE_PLACES_API_KEY,
-                              language: 'es',
+                              language: 'en',
                             }}
                         />
                         </View>
@@ -109,18 +131,18 @@ export default class Ubicacion extends Component {
                         </TouchableOpacity>
                         </View>
                         <Text>{this.state.location}</Text>
-                        <View style={styles.mapView}>
+                        <View style={{height:"100%", width:"100%"}}>
                             <MapView
-                            style={styles.mapView}
-                            initialRegion={{
-                                latitude: 37.78825,
-                                longitude: -122.4324,
-                                latitudeDelta: 0.0922,
-                                longitudeDelta: 0.0421,
-                            }}
-                            >
-                            </MapView>                        
-                        </View>
+                                style={styles.mapView}
+                                initialRegion={{
+                                    latitude: 37.78825,
+                                    longitude: -122.4324,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
+                                >
+                            </MapView>     
+                        </View>                            
                     </View>
                 </View>
                 <MenuFooter navigation={this.props.navigation}/>
